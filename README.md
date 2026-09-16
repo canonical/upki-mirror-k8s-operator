@@ -4,10 +4,11 @@ This repository contains the source code for a Charmed Operator that drives [upk
 
 ## Usage
 
-Assuming you have access to a bootstrapped Juju controller on Kubernetes, you can simply:
+With a bootstrapped Juju 3.6+ controller on Kubernetes, deploy the locally built charm
+with the rebuilt non-root image accessible to your cluster (see [CONTRIBUTING.md](./CONTRIBUTING.md)):
 
 ```bash
-$ juju deploy upki-mirror-k8s
+$ juju deploy ./upki-mirror-k8s_amd64.charm --resource nginx-image="$UPKI_OCI_IMAGE"
 ```
 
 You can see the application address in `juju status`, or get it like so:
@@ -16,7 +17,7 @@ You can see the application address in `juju status`, or get it like so:
 $ juju status --format=json | jq -r '.applications."upki-mirror-k8s".address'
 ```
 
-You should then be able to browse to `http://<address>/manifest.json`.
+You should then be able to browse to `http://<address>:8080/revocation/manifest.json`.
 
 ## OCI Images
 

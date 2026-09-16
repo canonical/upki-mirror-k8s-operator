@@ -112,5 +112,28 @@ juju add-model dev
 juju model-config logging-config="<root>=INFO;unit=DEBUG"
 # Deploy the charm
 juju deploy ./upki-mirror-k8s_amd64.charm \
-  --resource nginx-image="$(yq '.resources.nginx-image.upstream-source' charmcraft.yaml)"
+  --resource nginx-image="$UPKI_OCI_IMAGE"
 ```
+
+Set `UPKI_OCI_IMAGE` to the rebuilt non-root image accessible to your Kubernetes cluster.
+The old upstream image runs as root and is incompatible with this charm's UID/GID.
+Integration tests also read `UPKI_OCI_IMAGE`.
+
+### Test the image locally
+
+Build and load the ROCK without publishing it:
+
+```bash
+rockcraft pack
+rockcraft.skopeo --insecure-policy copy oci-archive:upki-mirror_1.0.0-beta.3_amd64.rock \
+  docker-daemon:upki-mirror:non-root
+UPKI_TEST_IMAGE=upki-mirror:non-root uv run --all-extras pytest tests/image -v
+```
+
+The image test checks UID/GID 584792, writes to workload and Promtail directories,
+and serves a manifest through Nginx on port 8080 with all capabilities dropped.
+It tries Docker first, then Podman if Docker is unavailable. For Podman, load the
+ROCK using `rockcraft.skopeo copy` with a `containers-storage:` destination instead.
+No image publication is needed for this test.
+`--insecure-policy` permits loading this locally built, unsigned artifact without
+requiring a system-wide Skopeo trust policy.
