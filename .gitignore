@@ -6,6 +6,13 @@ build/
 __pycache__/
 *.py[cod]
 *.rock
+# Rockcraft lifecycle output
+bundles/
+images/
+overlay/
+parts/
+prime/
+stage/
 .vscode/*
 *.egg-info/
 requirements*.txt
