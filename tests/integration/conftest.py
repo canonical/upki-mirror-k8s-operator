@@ -88,8 +88,13 @@ def upki_mirror_charm(request):
 
 @fixture(scope="module")
 def upki_mirror_oci_image():
+    if image := os.getenv("UPKI_OCI_IMAGE"):
+        return image
     meta = yaml.safe_load(Path("./charmcraft.yaml").read_text())
-    return meta["resources"]["nginx-image"]["upstream-source"]
+    image = meta["resources"]["nginx-image"].get("upstream-source")
+    if not image:
+        raise RuntimeError("Set UPKI_OCI_IMAGE to a non-root image accessible to the Juju cluster")
+    return image
 
 
 @fixture(scope="module")
