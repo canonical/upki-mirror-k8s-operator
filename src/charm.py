@@ -35,7 +35,7 @@ class UpkiMirrorCharm(ops.CharmBase):
         self._ingress = IngressPerAppRequirer(
             self,
             host=f"{self.app.name}.{self.model.name}.svc.cluster.local",
-            port=80,
+            port=8080,
             strip_prefix=True,
         )
 
@@ -45,7 +45,7 @@ class UpkiMirrorCharm(ops.CharmBase):
         self._container.make_dir("/var/www/html/intermediates", make_parents=True)
         self._container.add_layer("nginx", pebble_layer(), combine=True)
         self._container.replan()
-        self.unit.open_port(protocol="tcp", port=80)
+        self.unit.open_port(protocol="tcp", port=8080)
         self.unit.status = ops.ActiveStatus()
 
 

@@ -11,6 +11,7 @@ summary: |
   The upki-mirror is a service for fetching and serving crlite filters.
 
 type: charm
+charm-user: non-root
 base: ubuntu@24.04
 platforms:
   amd64:
@@ -33,6 +34,8 @@ assumes:
 containers:
   nginx:
     resource: nginx-image
+    uid: 584792
+    gid: 584792
     mounts:
       - storage: data
         location: /var/www/html
@@ -41,8 +44,7 @@ resources:
   nginx-image:
     type: oci-image
     description: OCI image for nginx
-    # Included for simplicity in integration tests
-    upstream-source: ghcr.io/jnsgruk/upki-mirror:1.0.0-beta.3
+    # Supply the rebuilt non-root image explicitly; the previous upstream runs as root.
 
 charm-libs:
   - lib: traefik_k8s.ingress

@@ -40,5 +40,5 @@ def test_nginx_pebble_ready(loaded_ctx):
         "intermediates": ServiceStatus.ACTIVE,
         "nginx": ServiceStatus.ACTIVE,
     }
-    assert result.opened_ports == frozenset({TCPPort(80)})
+    assert result.opened_ports == frozenset({TCPPort(8080)})
     assert result.unit_status == ActiveStatus()

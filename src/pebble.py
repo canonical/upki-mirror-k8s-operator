@@ -57,7 +57,7 @@ def pebble_layer() -> ops.pebble.Layer:
                     "override": "replace",
                     "level": "alive",
                     "period": "30s",
-                    "tcp": {"port": 80},
+                    "tcp": {"port": 8080},
                     "startup": "enabled",
                 },
                 "fetch-mozilla-crlite": {
