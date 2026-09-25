@@ -34,7 +34,6 @@ jobs:
       - name: Run tests
         run: make unit
 
-
   build-rock:
     name: Build Rock
     runs-on: ubuntu-24.04
@@ -70,12 +69,12 @@ jobs:
         run: |
           sudo skopeo --insecure-policy copy \
             "oci-archive:$(realpath ./upki-mirror_*.rock)" \
-            "docker://ghcr.io/jnsgruk/upki-mirror:${{ steps.get_version.outputs.VERSION }}" \
+            "docker://ghcr.io/canonical/upki-mirror:${{ steps.get_version.outputs.VERSION }}" \
             --dest-creds "${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}"
 
           sudo skopeo --insecure-policy copy \
             "oci-archive:$(realpath ./upki-mirror_*.rock)" \
-            "docker://ghcr.io/jnsgruk/upki-mirror:latest" \
+            "docker://ghcr.io/canonical/upki-mirror:latest" \
             --dest-creds "${{ github.actor }}:${{ secrets.GITHUB_TOKEN }}"
 
   pack-charm:

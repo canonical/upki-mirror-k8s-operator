@@ -32,4 +32,4 @@ Please see the [Juju SDK docs](https://juju.is/docs/sdk) for guidelines
 on enhancements to this charm following best practice guidelines, and the
 [contributing] doc for developer guidance.
 
-[contributing]: https://github.com/jnsgruk/upki-mirror-k8s-operator/blob/main/CONTRIBUTING.md
+[contributing]: https://github.com/canonical/upki-mirror-k8s-operator/blob/main/CONTRIBUTING.md
