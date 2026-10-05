@@ -125,7 +125,7 @@ Build and load the ROCK without publishing it:
 
 ```bash
 rockcraft pack
-rockcraft.skopeo --insecure-policy copy oci-archive:upki-mirror_1.0.0-beta.3_amd64.rock \
+rockcraft.skopeo --insecure-policy copy oci-archive:upki-mirror_1.0.0_amd64.rock \
   docker-daemon:upki-mirror:non-root
 UPKI_TEST_IMAGE=upki-mirror:non-root uv run --all-extras pytest tests/image -v
 ```

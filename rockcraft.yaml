@@ -1,5 +1,5 @@
 name: upki-mirror
-version: 1.0.0-beta.3
+version: 1.0.0
 license: Apache-2.0
 base: ubuntu@24.04
 build-base: ubuntu@24.04
@@ -29,7 +29,7 @@ parts:
     override-pull: |
       craftctl default
       git fetch --tags
-      git checkout "upki-$CRAFT_PROJECT_VERSION"
+      git checkout "v$CRAFT_PROJECT_VERSION"
     stage:
       - bin/intermediates
       - bin/mozilla-crlite
