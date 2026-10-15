@@ -17,3 +17,6 @@ stage/
 *.egg-info/
 requirements*.txt
 .spread*
+
+# Workshop runtime lock
+.workshop.lock

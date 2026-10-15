@@ -1,0 +1,6 @@
+#!/bin/bash -e
+# Use the same user and login environment as workshop actions.
+sudo -i -u workshop -- bash -e << 'EOF'
+cd /project
+uv sync --all-extras --locked
+EOF

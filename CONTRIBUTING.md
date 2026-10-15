@@ -44,6 +44,39 @@ source .venv/bin/activate
 uv sync --all-extras
 ```
 
+### Canonical Workshop
+
+Alternatively, use [Canonical Workshop](https://github.com/canonical/workshop) to run the
+development tools in an isolated environment. With Workshop installed and its host setup
+complete, run these commands from your checkout (or the worktree you are developing in):
+
+```bash
+workshop launch dev
+workshop actions dev
+workshop run dev -- lint
+workshop run dev -- unit
+workshop run dev -- pytest tests/unit/test_charm.py -k pebble
+workshop run dev -- format
+workshop shell dev
+```
+
+`lint`, `format`, and `unit` reuse the Make targets above. The `pytest` action forwards its
+arguments to pytest and excludes image and integration tests. The project SDK installs Make,
+Git, build tools, and the locked Python dependencies. The project is mounted at `/project`,
+with a separate virtual environment at `/home/workshop/.venvs/upki-mirror` inside the workshop;
+it does not share your host's `.venv`. Source edits and generated coverage files are visible
+in your checkout.
+
+After updating `uv.lock`, `workshop.yaml`, or the project SDK hooks in `.workshop/`, run:
+
+```bash
+workshop refresh dev
+```
+
+This definition covers linting and charm unit tests. Continue to use the host workflows below
+for packing charms and ROCKs (LXD), image checks (Docker or Podman), and integration tests
+(Juju and Kubernetes via Spread). Those tools and services are not installed in the workshop.
+
 ## Running tests
 
 Unit tests can be run locally with no additional tools by running `make unit`. All of the project's unit tests are designed to run agnostic of machine and network, and shouldn't require any additional dependencies other than those injected by `uv run` and the `Make` target.

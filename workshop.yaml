@@ -1,0 +1,25 @@
+# Development environment for the upki-mirror Kubernetes charm.
+# Packaging needs LXD; image tests need Docker/Podman; integration tests need
+# Juju and Kubernetes. Run those separately as described in CONTRIBUTING.md.
+name: dev
+base: ubuntu@26.04
+
+sdks:
+  - name: uv
+  - name: project-upki-mirror-dev
+
+actions:
+  lint: |
+    make lint
+
+  format: |
+    make format
+
+  unit: |
+    make unit
+
+  # Forward pytest arguments for focused charm tests, without image/Juju tests.
+  pytest: |
+    PYTHONPATH=/project:/project/lib:/project/src \
+      uv run --all-extras --locked pytest \
+      --ignore=tests/integration --ignore=tests/image --tb native -v "$@"

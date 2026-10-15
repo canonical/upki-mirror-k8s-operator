@@ -1,0 +1,10 @@
+#!/bin/bash -e
+# Make drives the existing development targets. Git and a compiler are useful
+# when uv needs to build a dependency from source.
+apt-get update
+apt-get install -y --no-install-recommends make git build-essential pkg-config
+
+# Avoid hardlinks across the project mount and keep the virtual environment
+# separate from a host-side .venv. Persist it across workshop restarts.
+echo UV_LINK_MODE=copy >> /etc/environment
+echo UV_PROJECT_ENVIRONMENT=/home/workshop/.venvs/upki-mirror >> /etc/environment
