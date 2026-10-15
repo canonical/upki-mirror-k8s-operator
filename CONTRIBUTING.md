@@ -48,54 +48,42 @@ uv sync --all-extras
 
 Unit tests can be run locally with no additional tools by running `make unit`. All of the project's unit tests are designed to run agnostic of machine and network, and shouldn't require any additional dependencies other than those injected by `uv run` and the `Make` target.
 
-Integration testing is taken care of using `spread`. Currently, there are two supported backends -
-tests can either be run in LXD virtual machines, or on a pre-provisioned server (such as a Github
-Actions runner or development VM).
+Integration testing is taken care of using `spread` in LXD virtual machines,
+both locally and on GitHub Actions runners.
 
 Spread provisions Canonical Kubernetes using Concierge's `k8s` preset and the
 `1.35-classic/stable` channel, the newest Kubernetes track with a stable release
 available as of October 15, 2026. The preset configures local storage, networking,
 and an L2 load balancer. Both the CI host and the test VM use LXD `latest/stable`.
+Juju is installed from `4/stable` and bootstrapped on the `k8s` cloud.
 
 To show the available integration tests, you can:
 
 ```bash
-$ charmcraft test --list lxd:
-lxd:ubuntu-24.04:tests/spread/deploy:juju_3_6
-lxd:ubuntu-24.04:tests/spread/ingress-path:juju_3_6
-lxd:ubuntu-24.04:tests/spread/ingress:juju_3_6
-lxd:ubuntu-24.04:tests/spread/observability-relations:juju_3_6
+$ charmcraft.spread --list lxd:
+lxd:ubuntu-24.04:tests/spread/deploy-bash:juju_4
+lxd:ubuntu-24.04:tests/spread/deploy-python:juju_4
+lxd:ubuntu-24.04:tests/spread/ingress-path:juju_4
+lxd:ubuntu-24.04:tests/spread/ingress:juju_4
+lxd:ubuntu-24.04:tests/spread/observability-relations:juju_4
 ```
 
 From there, you can either run all of the tests, or a selection:
 
 ```bash
 # Run all of the tests
-$ charmcraft test -v lxd:
+$ charmcraft.spread -v lxd:
 
 # Run a particular test
-$ charmcraft test -v lxd:ubuntu-24.04:tests/spread/deploy:juju_3_6
-```
-
-To run any of the tests on a locally provisioned machine, use the `github-ci` backend, e.g.
-
-```bash
-# List available tests
-$ charmcraft test --list github-ci:
-
-# Run all of the tests
-$ charmcraft test -v github-ci:
-
-# Run a particular test
-$ charmcraft test -v github-ci:ubuntu-24.04:tests/spread/deploy:juju_3_6
+$ charmcraft.spread -v lxd:ubuntu-24.04:tests/spread/deploy-python:juju_4
 ```
 
 ### Troubleshooting Failing Tests
 
-If you're working on a test that's failing, you can use `spread` to get an interactive shell inside the test environment on failure, which allows for easier debugging. To enable this, add `--debug` to your `charmcraft test` commands. For example:
+If you're working on a test that's failing, you can use `spread` to get an interactive shell inside the test environment on failure, which allows for easier debugging. To enable this, add `--debug` to your `charmcraft.spread` commands. For example:
 
 ```bash
-❯ charmcraft test -v --debug lxd:ubuntu-24.04:tests/spread/functional/
+❯ charmcraft.spread -v --debug lxd:ubuntu-24.04:tests/spread/ingress:juju_4
 ```
 
 If the above tests were to fail, you'd be dropped into an interactive shell before the machine is reaped.

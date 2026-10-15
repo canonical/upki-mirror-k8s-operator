@@ -6,7 +6,7 @@ environment:
   CI: "$(HOST: echo $CI)"
   CONCIERGE_LXD_CHANNEL: latest/stable
   CONCIERGE_K8S_CHANNEL: 1.35-classic/stable
-  CONCIERGE_JUJU_CHANNEL/juju_3: 3/stable
+  CONCIERGE_JUJU_CHANNEL/juju_4: 4/stable
 
 backends:
   lxd:
