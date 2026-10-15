@@ -49,7 +49,12 @@ uv sync --all-extras
 Alternatively, use [Canonical Workshop](https://github.com/canonical/workshop) to run the
 development tools in an isolated environment. This definition uses
 `confinement: virtual-machine` and requires host support for LXD virtual machines (including
-KVM). Workshop 0.9.7 requires enabling its experimental VM backend on the host before launch:
+KVM). Loading SDKs also requires LXD's support for shifted disk mounts in VMs, available in
+LXD 6.10. LXD 6.9 can launch a VM without SDKs but refuses this definition. If your stable
+channel still provides 6.9, use a suitable newer channel or wait for the stable release;
+changing channels affects every LXD instance on the host, and downgrading is unsupported.
+
+Workshop 0.9.7 requires enabling its experimental VM backend on the host before launch:
 
 ```bash
 sudo snap set workshop workshop.experimental-vms=1

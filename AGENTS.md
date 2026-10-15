@@ -72,7 +72,9 @@ image and integration tests explicitly.
 Use the Workshop pack actions for packaging checks; they forward CLI arguments and use
 managed LXD build containers inside the workshop VM. Keep `confinement: virtual-machine`: it avoids
 the snapd/AppArmor failure in a second level of unprivileged containers. Host KVM support
-is required. Do not replace managed builds with destructive mode. Charm packing requires a
+is required, as is LXD support for shifted disk mounts in VMs (LXD 6.10 or newer).
+LXD 6.9 cannot load SDKs in a VM workshop. Do not replace managed builds with destructive mode.
+Charm packing requires a
 regular clone: its `git describe` build hook cannot resolve a linked worktree's external
 Git metadata inside Workshop. Do not mount the host's Git metadata to work around this.
 Host `charmcraft pack` and `rockcraft pack` remain available alternatives.
