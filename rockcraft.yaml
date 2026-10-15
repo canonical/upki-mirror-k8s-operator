@@ -1,5 +1,5 @@
 name: upki-mirror
-version: 1.0.0
+version: 1.0.1
 license: Apache-2.0
 base: ubuntu@24.04
 build-base: ubuntu@24.04
