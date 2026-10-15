@@ -23,7 +23,7 @@ execute: |
     --resource nginx-image="$oci_image"
 
   # Wait for deploy to settle
-  juju wait-for application upki-mirror-k8s
+  uv run --all-extras python -c 'import jubilant; jubilant.Juju().wait(jubilant.all_active, timeout=180)'
 
   # Get IP for upki-mirror-k8s
   address="$(juju status --format json | jq -r '.applications."upki-mirror-k8s".address')"

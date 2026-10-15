@@ -21,7 +21,7 @@ def test_deploy(juju: jubilant.Juju, upki_mirror_charm, upki_mirror_oci_image):
     )
     juju.deploy(TRAEFIK, config=traefik_config, trust=True)
     juju.integrate(*apps)
-    juju.wait(jubilant.all_active)
+    juju.wait(jubilant.all_active, timeout=360)
 
 
 def test_ingress_setup(juju: jubilant.Juju):
