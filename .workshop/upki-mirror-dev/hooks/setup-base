@@ -4,6 +4,16 @@
 apt-get update
 apt-get install -y --no-install-recommends make git build-essential pkg-config
 
+# Keep the build daemon inside the workshop VM. The pack actions use managed
+# build containers with their declared bases, independent of the VM's base.
+snap install charmcraft --classic
+snap install rockcraft --classic
+snap install lxd --channel=6/stable
+if ! lxc storage show default >/dev/null 2>&1; then
+    lxd init --auto --storage-backend=dir
+fi
+usermod -aG lxd workshop
+
 # Avoid hardlinks across the project mount and keep the virtual environment
 # separate from a host-side .venv. Persist it across workshop restarts.
 echo UV_LINK_MODE=copy >> /etc/environment

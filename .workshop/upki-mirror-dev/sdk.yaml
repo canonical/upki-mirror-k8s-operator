@@ -1,4 +1,4 @@
 # Project SDK, applied after the uv SDK in workshop.yaml.
 name: upki-mirror-dev
 version: "0"
-summary: Development tools and dependencies for the upki-mirror Kubernetes charm
+summary: Development and packaging tools for the upki-mirror Kubernetes charm

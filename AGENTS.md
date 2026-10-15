@@ -47,6 +47,8 @@ workshop launch dev
 workshop run dev -- lint
 workshop run dev -- unit
 workshop run dev -- pytest tests/unit/test_charm.py -k pebble
+workshop run dev -- pack-charm
+workshop run dev -- pack-rock
 ```
 
 The project is mounted at `/project`; the Workshop virtual environment lives inside the
@@ -67,8 +69,16 @@ review its diff. Select checks proportionate to the change. `make unit` also col
 image test, which skips unless `UPKI_TEST_IMAGE` is set; the Workshop `pytest` action excludes
 image and integration tests explicitly.
 
-Use `charmcraft pack` and `rockcraft pack` for packaging checks, and run integration tests
-through Spread with the `lxd` backend as documented in `CONTRIBUTING.md`. Packaging, image
-testing, and integration infrastructure are not provisioned by this Workshop definition.
+Use the Workshop pack actions for packaging checks; they forward CLI arguments and use
+managed LXD build containers inside the workshop VM. Keep `confinement: virtual-machine`: it avoids
+the snapd/AppArmor failure in a second level of unprivileged containers. Host KVM support
+is required. Do not replace managed builds with destructive mode. Charm packing requires a
+regular clone: its `git describe` build hook cannot resolve a linked worktree's external
+Git metadata inside Workshop. Do not mount the host's Git metadata to work around this.
+Host `charmcraft pack` and `rockcraft pack` remain available alternatives.
+
+Run integration tests through Spread with the `lxd` backend as documented in
+`CONTRIBUTING.md`. Image-testing and integration infrastructure are not provisioned by
+this Workshop definition.
 Check `spread.yaml` and `charmcraft test --list lxd:` for actual task names and backends before
 running tests. Report the checks run and any validation that could not be completed.

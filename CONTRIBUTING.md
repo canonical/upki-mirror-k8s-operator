@@ -47,8 +47,17 @@ uv sync --all-extras
 ### Canonical Workshop
 
 Alternatively, use [Canonical Workshop](https://github.com/canonical/workshop) to run the
-development tools in an isolated environment. With Workshop installed and its host setup
-complete, run these commands from your checkout (or the worktree you are developing in):
+development tools in an isolated environment. This definition uses
+`confinement: virtual-machine` and requires host support for LXD virtual machines (including
+KVM). Workshop 0.9.7 requires enabling its experimental VM backend on the host before launch:
+
+```bash
+sudo snap set workshop workshop.experimental-vms=1
+sudo snap restart workshop.workshopd
+```
+
+With Workshop installed and its host setup complete, run these commands from your checkout
+(or the worktree you are developing in):
 
 ```bash
 workshop launch dev
@@ -57,13 +66,16 @@ workshop run dev -- lint
 workshop run dev -- unit
 workshop run dev -- pytest tests/unit/test_charm.py -k pebble
 workshop run dev -- format
+workshop run dev -- pack-charm
+workshop run dev -- pack-rock --verbose
 workshop shell dev
 ```
 
 `lint`, `format`, and `unit` reuse the Make targets above. The `pytest` action forwards its
 arguments to pytest and excludes image and integration tests. The project SDK installs Make,
-Git, build tools, and the locked Python dependencies. The project is mounted at `/project`,
-with a separate virtual environment at `/home/workshop/.venvs/upki-mirror` inside the workshop;
+Git, build tools, Charmcraft, Rockcraft, LXD, and the locked Python dependencies.
+The project is mounted at `/project`, with a separate virtual environment at
+`/home/workshop/.venvs/upki-mirror` inside the workshop;
 it does not share your host's `.venv`. Source edits and generated coverage files are visible
 in your checkout.
 
@@ -73,9 +85,33 @@ After updating `uv.lock`, `workshop.yaml`, or the project SDK hooks in `.worksho
 workshop refresh dev
 ```
 
-This definition covers linting and charm unit tests. Continue to use the host workflows below
-for packing charms and ROCKs (LXD), image checks (Docker or Podman), and integration tests
-(Juju and Kubernetes via Spread). Those tools and services are not installed in the workshop.
+Workshop 0.9.7 requires recreating an existing workshop to change its confinement. This
+discards files and build caches stored inside the old workshop; your mounted checkout is
+preserved:
+
+```bash
+workshop remove dev
+workshop launch dev
+```
+
+The VM's own LXD daemon runs managed build containers for the pack actions, which
+forward arguments to Charmcraft and Rockcraft. Builds use their declared Ubuntu 24.04 bases;
+the VM itself uses Ubuntu 26.04. Finished `.charm` and `.rock` files appear in your checkout.
+The first build downloads its build image and dependencies, and ROCK builds compile the
+upstream Rust tools, so allow additional time and disk space.
+
+The VM runtime avoids the snapd/AppArmor failure seen with two levels of unprivileged LXD
+containers ([LXD issue #14770](https://github.com/canonical/lxd/issues/14770)). Packing uses
+normal managed builds, without destructive mode or access to the host's LXD daemon.
+
+When packing the charm, use a regular clone rather than a linked Git worktree. The charm's
+build hook runs `git describe`, and [Workshop cannot resolve linked worktree Git metadata
+inside the container](https://documentation.ubuntu.com/canonical-workshop/latest/how-to/develop-with-workshops/use-git/#use-worktrees).
+Lint, unit tests, and ROCK packing can still run from a linked worktree. Keep Git operations
+on the host when using worktrees.
+
+Continue to use the host workflows below for image checks (Docker or Podman) and integration
+tests (Juju and Kubernetes via Spread). Those services are not provisioned in the workshop.
 
 ## Running tests
 

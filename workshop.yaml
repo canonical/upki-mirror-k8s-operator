@@ -1,8 +1,9 @@
 # Development environment for the upki-mirror Kubernetes charm.
-# Packaging needs LXD; image tests need Docker/Podman; integration tests need
-# Juju and Kubernetes. Run those separately as described in CONTRIBUTING.md.
+# Packaging uses LXD containers inside the workshop VM. Image tests and
+# integration tests use the separate workflows described in CONTRIBUTING.md.
 name: dev
 base: ubuntu@26.04
+confinement: virtual-machine
 
 sdks:
   - name: uv
@@ -17,6 +18,12 @@ actions:
 
   unit: |
     make unit
+
+  pack-charm: |
+    charmcraft pack --use-lxd "$@"
+
+  pack-rock: |
+    rockcraft pack --use-lxd "$@"
 
   # Forward pytest arguments for focused charm tests, without image/Juju tests.
   pytest: |
