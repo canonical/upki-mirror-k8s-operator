@@ -52,6 +52,11 @@ Integration testing is taken care of using `spread`. Currently, there are two su
 tests can either be run in LXD virtual machines, or on a pre-provisioned server (such as a Github
 Actions runner or development VM).
 
+Spread provisions Canonical Kubernetes using Concierge's `k8s` preset and the
+`1.35-classic/stable` channel, the newest Kubernetes track with a stable release
+available as of October 15, 2026. The preset configures local storage, networking,
+and an L2 load balancer. Both the CI host and the test VM use LXD `latest/stable`.
+
 To show the available integration tests, you can:
 
 ```bash

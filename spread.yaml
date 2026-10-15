@@ -5,6 +5,7 @@ workers: 1
 environment:
   CI: "$(HOST: echo $CI)"
   CONCIERGE_LXD_CHANNEL: latest/stable
+  CONCIERGE_K8S_CHANNEL: 1.35-classic/stable
   CONCIERGE_JUJU_CHANNEL/juju_3: 3/stable
 
 backends:
@@ -63,7 +64,7 @@ prepare: |
   fi
 
   snap install --classic concierge
-  concierge prepare --trace -p microk8s --extra-snaps astral-uv --extra-debs make
+  concierge prepare --trace -p k8s --extra-snaps astral-uv --extra-debs make
 
   pushd "$SPREAD_PATH"
 
