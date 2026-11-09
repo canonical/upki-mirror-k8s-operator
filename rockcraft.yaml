@@ -1,5 +1,5 @@
 name: upki-mirror
-version: 1.0.1
+version: 1.0.2
 license: Apache-2.0
 base: ubuntu@24.04
 build-base: ubuntu@24.04
@@ -24,12 +24,9 @@ services:
 parts:
   upki-mirror:
     plugin: rust
-    source: https://github.com/rustls/upki.git
-    source-subdir: upki-mirror
-    override-pull: |
-      craftctl default
-      git fetch --tags
-      git checkout "v$CRAFT_PROJECT_VERSION"
+    source: https://static.crates.io/crates/upki-mirror/upki-mirror-0.2.0.crate
+    source-checksum: sha256/d72f5fd61f6becf4458e4ac12f56b298947bb26a7efbc06458f9de23cbfd49b2
+    source-type: tar
     stage:
       - bin/intermediates
       - bin/mozilla-crlite
